@@ -383,6 +383,7 @@ export default {
     channelMonitor: '渠道监控',
     channelStatus: '渠道状态',
     riskControl: '风控中心',
+    chat: 'Chat 对话',
   },
 
   // Auth
@@ -623,6 +624,23 @@ export default {
   // Groups (shared)
   groups: {
     subscription: '订阅'
+  },
+
+  // Chat
+  chat: {
+    title: 'Chat 对话',
+    newConversation: '新建会话',
+    noConversations: '暂无会话，点击右上角新建',
+    untitled: '未命名会话',
+    messages: '条消息',
+    selectOrCreate: '选择一个会话或新建会话开始聊天',
+    selectApiKey: '选择 API Key',
+    selectModel: '选择模型',
+    inputPlaceholder: '输入消息，Enter 发送，Shift+Enter 换行',
+    noApiKeys: '暂无可用 API Key，请先到「API 密钥」页面创建',
+    noModels: '暂无可用模型',
+    errorNoKey: '请先选择一个 API Key',
+    sendError: '发送失败',
   },
 
   // API Keys

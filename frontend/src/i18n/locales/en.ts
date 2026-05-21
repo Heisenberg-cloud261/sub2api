@@ -383,6 +383,7 @@ export default {
     channelMonitor: 'Channel Monitor',
     channelStatus: 'Channel Status',
     riskControl: 'Risk Control',
+    chat: 'Chat',
   },
 
   // Auth
@@ -624,6 +625,23 @@ export default {
   // Groups (shared)
   groups: {
     subscription: 'Sub'
+  },
+
+  // Chat
+  chat: {
+    title: 'Chat',
+    newConversation: 'New Conversation',
+    noConversations: 'No conversations yet. Click + to create one.',
+    untitled: 'Untitled',
+    messages: 'messages',
+    selectOrCreate: 'Select or create a conversation to start chatting',
+    selectApiKey: 'Select API Key',
+    selectModel: 'Select Model',
+    inputPlaceholder: 'Type a message. Enter to send, Shift+Enter for new line.',
+    noApiKeys: 'No API Keys available. Please create one in API Keys page.',
+    noModels: 'No models available',
+    errorNoKey: 'Please select an API Key first',
+    sendError: 'Failed to send',
   },
 
   // API Keys
