@@ -164,7 +164,6 @@ import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import { keysAPI } from '@/api/keys'
-import { userChannelsAPI } from '@/api/channels'
 import type { ApiKey } from '@/types'
 
 const { t } = useI18n()
@@ -185,6 +184,16 @@ interface Conversation {
   messages: ChatMessage[]
   createdAt: string
   updatedAt: string
+}
+
+interface GatewayModel {
+  id?: string
+  name?: string
+  display_name?: string
+}
+
+interface GatewayModelsResponse {
+  data?: GatewayModel[]
 }
 
 const showSidebar = ref(true)
@@ -399,30 +408,53 @@ async function fetchApiKeys() {
 }
 
 async function fetchModels() {
+  const apiKeyValue = selectedKeyObj.value?.key
+  if (!apiKeyValue) {
+    availableModels.value = []
+    selectedModel.value = ''
+    return
+  }
+
   try {
-    const channels = await userChannelsAPI.getAvailable()
-    const modelSet = new Set<string>()
-    for (const ch of channels) {
-      for (const platform of ch.platforms) {
-        for (const model of platform.supported_models) {
-          modelSet.add(model.name)
-        }
-      }
+    const res = await fetch('/v1/models', {
+      headers: {
+        'Authorization': `Bearer ${apiKeyValue}`,
+      },
+    })
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`)
     }
+
+    const data = await res.json() as GatewayModelsResponse
+    const modelSet = new Set(
+      (data.data || [])
+        .map(model => model.id || model.name || model.display_name || '')
+        .filter(Boolean)
+    )
     availableModels.value = Array.from(modelSet).sort()
-    if (availableModels.value.length && !selectedModel.value) {
+    if (availableModels.value.length && !availableModels.value.includes(selectedModel.value)) {
       selectedModel.value = availableModels.value[0]
     }
-  } catch { /* ignore */ }
+    if (!availableModels.value.length) {
+      selectedModel.value = ''
+    }
+  } catch {
+    availableModels.value = []
+    selectedModel.value = ''
+  }
 }
 
 watch(currentConversationId, () => {
   nextTick(scrollToBottom)
 })
 
+watch(selectedKeyId, () => {
+  fetchModels()
+})
+
 onMounted(async () => {
   loadConversations()
-  await Promise.all([fetchApiKeys(), fetchModels()])
+  await fetchApiKeys()
+  await fetchModels()
 })
 </script>
-
